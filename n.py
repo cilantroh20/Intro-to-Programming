@@ -1,33 +1,48 @@
-# A list of replacement words to be passed in to the play game function. 
-parts_of_speech1  = ["PLACE", "PERSON", "PLURALNOUN", "NOUN", "NAME", "VERB", "OCCUPATION", "ADJECTIVE"]
+# replaced with a random verb. You're free to change what the random functions
+# return as verbs or nouns for your own fun, but for submissions keep the code the way it is!
 
-# The following are some test strings to pass in to the play_game function.
-test_string1 = "Hi, my name is NAME and I really like to VERB PLURALNOUN. I'm also a OCCUPATION at PLACE."
-test_string2 = """PERSON! What is PERSON going to do with all these ADJECTIVE PLURALNOUN? Only a registered 
-OCCUPATION could VERB them."""
-test_string3 = "What a ADJECTIVE day! I can VERB the day off from being a OCCUPATION and go VERB at PLACE."
+from random import randint
 
-# Checks if a word in parts_of_speech is a substring of the word passed in.
-def word_in_pos(word, parts_of_speech):
-    for pos in parts_of_speech:
-        if pos in word:
-            return pos
-    return None
+def random_verb():
+    random_num = randint(0, 1)
+    if random_num == 0:
+        return "run"
+    else:
+        return "kayak"
         
-# Plays a full game of mad_libs. A player is prompted to replace words in ml_string, 
-# which appear in parts_of_speech with their own words.  
-def play_game(ml_string, parts_of_speech):    
-    replaced = []
-    ml_string = ml_string.split()
-    for word in ml_string:
-        replacement = word_in_pos(word, parts_of_speech)
-        if replacement != None:
-            user_input = raw_input("Type in a: " + replacement + " ")
-            word = word.replace(replacement, user_input)
-            replaced.append(word)
+def random_noun():
+    random_num = randint(0,1)
+    if random_num == 0:
+        return "sofa"
+    else:
+        return "llama"
+
+def word_transformer(word):
+    if word == "NOUN":
+        return random_noun()
+    elif word == "VERB":
+        return random_verb()
+    else:
+        return word[0]
+        
+def process_madlib(mad_lib):
+    processed = ""
+    index = 0
+    box_length = 4
+    while index < len (madlib):
+        frame = madlib[index: index + box_length]
+        to_add = word_transformer(frame)
+        processed += to_add
+        if len (to_add) == 1:
+            index += 2
         else:
-            replaced.append(word)
-    replaced = " ".join(replaced)
-    return replaced
+            index += 4 
+            return processed 
+    # your code here
+    # you may find the built-in len function useful for this quiz
+    # documentation: https://docs.python.org/2/library/functions.html#len
     
-print play_game(test_string1, parts_of_speech1) 
+test_string_1 = "This is a good NOUN to use when you VERB your food"
+test_string_2 = "I'm going to VERB to the store and pick up a NOUN or two."
+print process_madlib(test_string_1)
+print process_madlib(test_string_2)
